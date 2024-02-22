@@ -1,3 +1,5 @@
+import os
+
 from aiogram import Router, Bot
 from aiogram.filters import Command
 from aiogram.types import Message
@@ -17,7 +19,8 @@ async def start_bot(bot: Bot):
 @router.message(Command('start'))
 async def get_start(message: Message, bot: Bot):
     """Хэндлер приветствующий пользователя при команде /start."""
-    db = DatabaseManager()
+    db = DatabaseManager(os.getenv('DATABASE_NAME'))
+    db.create_user('Гамид', 'Гаджимагомедов', '23232')
     tg_user_id = message.from_user.id
     tg_username = message.from_user.username
 
@@ -26,12 +29,12 @@ async def get_start(message: Message, bot: Bot):
     if user:
         await bot.send_message(
             message.from_user.id,
-            f'Здравствуй {user[1]}! 👋',
+            f'Здравствуй, {user[1]}! 👋',
             reply_markup=None
         )
     else:
         await bot.send_message(
             message.from_user.id,
-            f'Здравствуй {tg_username}! 👋',
+            f'Здравствуй, {tg_username}! 👋',
             reply_markup=None
         )
